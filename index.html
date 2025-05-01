@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>梦想学校成功率分析</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      min-height: 100vh;
+      padding: 2rem;
+      color: #333;
+      line-height: 1.6;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      color: #2c3e50;
+      margin-bottom: 0.5rem;
+    }
+    
+    p.subtitle {
+      font-size: 1.2rem;
+      color: #7f8c8d;
+    }
+    
+    .card {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+      padding: 2rem;
+      margin-bottom: 2rem;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+    }
+    
+    .card-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+    
+    .card-icon {
+      font-size: 1.8rem;
+      margin-right: 1rem;
+      color: #3498db;
+    }
+    
+    .card-title {
+      font-size: 1.5rem;
+      color: #2c3e50;
+    }
+    
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: #34495e;
+    }
+    
+    input[type="text"],
+    textarea,
+    select {
+      width: 100%;
+      padding: 0.8rem 1rem;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 1rem;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    input[type="text"]:focus,
+    textarea:focus,
+    select:focus {
+      border-color: #3498db;
+      box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+      outline: none;
+    }
+    
+    .autocomplete-container {
+      position: relative;
+    }
+    
+    .autocomplete-results {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: white;
+      border: 1px solid #ddd;
+      border-top: none;
+      border-radius: 0 0 5px 5px;
+      max-height: 200px;
+      overflow-y: auto;
+      z-index: 10;
+      display: none;
+    }
+    
+    .autocomplete-results.show {
+      display: block;
+    }
+    
+    .autocomplete-item {
+      padding: 0.8rem 1rem;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+    
+    .autocomplete-item:hover {
+      background-color: #f5f7fa;
+    }
+    
+    .awards-container {
+      margin-bottom: 1rem;
+    }
+    
+    .award-item {
+      display: flex;
+      margin-bottom: 1rem;
+      align-items: center;
+    }
+    
+    .award-item input {
+      flex: 1;
+      margin-right: 0.5rem;
+    }
+    
+    .btn {
+      background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+      color: white;
+      border: none;
+      padding: 0.8rem 1.5rem;
+      border-radius: 5px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    .btn i {
+      margin-right: 0.5rem;
+    }
+    
+    .btn-remove {
+      background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+      padding: 0.5rem;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .btn-remove i {
+      margin: 0;
+    }
+    
+    .success-rate {
+      text-align: center;
+      padding: 2rem 0;
+    }
+    
+    .rate-value {
+      font-size: 3rem;
+      font-weight: 700;
+      color: #2c3e50;
+      margin-bottom: 1rem;
+    }
+    
+    .rate-label {
+      font-size: 1.2rem;
+      color: #7f8c8d;
+      margin-bottom: 2rem;
+    }
+    
+    .progress-container {
+      width: 100%;
+      height: 20px;
+      background-color: #ecf0f1;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 1rem;
+    }
+    
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+      border-radius: 10px;
+      width: 0;
+      transition: width 1s ease;
+    }
+    
+    .factors {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+    
+    .factor-item {
+      background-color: #f8f9fa;
+      padding: 1rem;
+      border-radius: 5px;
+      display: flex;
+      align-items: center;
+    }
+    
+    .factor-icon {
+      font-size: 1.5rem;
+      margin-right: 1rem;
+      color: #3498db;
+    }
+    
+    .factor-text {
+      font-size: 0.9rem;
+    }
+    
+    @media (max-width: 768px) {
+      .card {
+        padding: 1.5rem;
+      }
+      
+      h1 {
+        font-size: 2rem;
+      }
+      
+      .factors {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>梦想学校成功率分析</h1>
+      <p class="subtitle">输入您的信息，我们将为您分析申请成功的可能性</p>
+    </header>
+    
+    <div class="card">
+      <div class="card-header">
+        <i class="fas fa-university card-icon"></i>
+        <h2 class="card-title">梦想学校</h2>
+      </div>
+      <div class="form-group">
+        <label for="school">输入您想申请的学校名称：</label>
+        <div class="autocomplete-container">
+          <input type="text" id="school" placeholder="例如：哈佛大学、清华大学..." autocomplete="off">
+          <div class="autocomplete-results" id="schoolResults"></div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="card">
+      <div class="card-header">
+        <i class="fas fa-trophy card-icon"></i>
+        <h2 class="card-title">奖项、竞赛和活动</h2>
+      </div>
+      <div class="form-group">
+        <label>添加您获得的奖项、参与的竞赛或活动：</label>
+        <div class="awards-container" id="awardsContainer">
+          <div class="award-item">
+            <input type="text" class="award-input" placeholder="例如：全国数学竞赛一等奖...">
+            <button class="btn btn-remove" onclick="removeAward(this)">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+        </div>
+        <button class="btn" onclick="addAward()">
+          <i class="fas fa-plus"></i> 添加更多
+        </button>
+      </div>
+      
+      <div class="form-group">
+        <label for="activities">课外活动描述：</label>
+        <textarea id="activities" rows="4" placeholder="描述您参与的课外活动、志愿服务或领导经历..."></textarea>
+      </div>
+    </div>
+    
+    <div class="card">
+      <div class="card-header">
+        <i class="fas fa-chart-line card-icon"></i>
+        <h2 class="card-title">成功率分析</h2>
+      </div>
+      <div class="success-rate">
+        <div class="rate-value" id="rateValue">0%</div>
+        <div class="rate-label">预估申请成功率</div>
+        <div class="progress-container">
+          <div class="progress-bar" id="progressBar"></div>
+        </div>
+        <button class="btn" onclick="calculateSuccessRate()">
+          <i class="fas fa-calculator"></i> 计算成功率
+        </button>
+      </div>
+      
+      <div class="factors">
+        <div class="factor-item">
+          <i class="fas fa-school factor-icon"></i>
+          <div class="factor-text">学校声誉和录取难度</div>
+        </div>
+        <div class="factor-item">
+          <i class="fas fa-medal factor-icon"></i>
+          <div class="factor-text">获奖情况和竞赛成绩</div>
+        </div>
+        <div class="factor-item">
+          <i class="fas fa-users factor-icon"></i>
+          <div class="factor-text">课外活动和领导经历</div>
+        </div>
+        <div class="factor-item">
+          <i class="fas fa-globe factor-icon"></i>
+          <div class="factor-text">申请人背景多样性</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <i class="fas fa-graduation-cap card-icon"></i>
+      <h2 class="card-title">提升申请竞争力</h2>
+    </div>
+    <div class="form-group">
+      <p>想要进入像哈佛、斯坦福、MIT等顶尖大学吗？除了优异的学术成绩外，以下活动和奖项将大大增强你的申请竞争力：</p>
+      
+      <div class="factors" style="margin-top: 1rem;">
+        <div class="factor-item">
+          <i class="fas fa-flask factor-icon"></i>
+          <div class="factor-text"><strong>科研项目：</strong>参与并主导科学研究项目，展示你的创新思维和解决问题的能力。</div>
+        </div>
+        
+        <div class="factor-item">
+          <i class="fas fa-user-tie factor-icon"></i>
+          <div class="factor-text"><strong>领导力经历：</strong>在学校社团、学生会等组织中担任领导职务，培养团队合作和领导能力。</div>
+        </div>
+        
+        <div class="factor-item">
+          <i class="fas fa-hands-helping factor-icon"></i>
+          <div class="factor-text"><strong>社区服务：</strong>积极参与社区服务活动，展示你的社会责任感和公益精神。</div>
+        </div>
+        
+        <div class="factor-item">
+          <i class="fas fa-award factor-icon"></i>
+          <div class="factor-text"><strong>国际竞赛奖项：</strong>在数学、科学、编程等领域的国际竞赛中获奖，证明你的专业能力和全球视野。</div>
+        </div>
+        
+        <div class="factor-item">
+          <i class="fas fa-music factor-icon"></i>
+          <div class="factor-text"><strong>艺术与体育成就：</strong>在音乐、舞蹈、体育等领域取得优异成绩，展示你的多元才能。</div>
+        </div>
+      </div>
+      
+      <p style="margin-top: 1.5rem; text-align: center; font-weight: 500;">
+        通过填写上方的表格，我们将根据你的个人经历和成就，为你提供量身定制的申请规划建议，帮助你实现进入梦想大学的目标。
+      </p>
+    </div>
+  </div>
+
+
+
+  <script>
+    // 模拟学校数据
+    const schools = [
+      "哈佛大学", "麻省理工学院", "斯坦福大学", "剑桥大学", "牛津大学",
+      "清华大学", "北京大学", "复旦大学", "上海交通大学", "浙江大学",
+      "南京大学", "中国人民大学", "武汉大学", "中山大学", "华中科技大学",
+      "哥伦比亚大学", "耶鲁大学", "普林斯顿大学", "芝加哥大学", "加州理工学院",
+      "东京大学", "京都大学", "首尔国立大学", "新加坡国立大学", "香港大学"
+    ];
+
+    // 自动补全功能
+    const schoolInput = document.getElementById('school');
+    const schoolResults = document.getElementById('schoolResults');
+
+    schoolInput.addEventListener('input', function() {
+      const inputValue = this.value.trim().toLowerCase();
+      schoolResults.innerHTML = '';
+      
+      if (inputValue.length === 0) {
+        schoolResults.classList.remove('show');
+        return;
+      }
+      
+      const matchingSchools = schools.filter(school => 
+        school.toLowerCase().includes(inputValue)
+      );
+      
+      if (matchingSchools.length > 0) {
+        schoolResults.classList.add('show');
+        matchingSchools.forEach(school => {
+          const item = document.createElement('div');
+          item.className = 'autocomplete-item';
+          item.textContent = school;
+          item.addEventListener('click', function() {
+            schoolInput.value = school;
+            schoolResults.classList.remove('show');
+          });
+          schoolResults.appendChild(item);
+        });
+      } else {
+        schoolResults.classList.remove('show');
+      }
+    });
+
+    // 点击页面其他地方关闭自动补全
+    document.addEventListener('click', function(e) {
+      if (e.target !== schoolInput) {
+        schoolResults.classList.remove('show');
+      }
+    });
+
+    // 添加奖项
+    function addAward() {
+      const awardsContainer = document.getElementById('awardsContainer');
+      const awardItem = document.createElement('div');
+      awardItem.className = 'award-item';
+      awardItem.innerHTML = `
+        <input type="text" class="award-input" placeholder="例如：全国数学竞赛一等奖...">
+        <button class="btn btn-remove" onclick="removeAward(this)">
+          <i class="fas fa-times"></i>
+        </button>
+      `;
+      awardsContainer.appendChild(awardItem);
+    }
+
+    // 删除奖项
+    function removeAward(button) {
+      const awardItem = button.parentElement;
+      awardItem.remove();
+    }
+
+    // 计算成功率
+    function calculateSuccessRate() {
+      // 获取学校输入
+      const school = document.getElementById('school').value.trim();
+      
+      // 获取所有奖项
+      const awardInputs = document.querySelectorAll('.award-input');
+      const awards = Array.from(awardInputs).map(input => input.value.trim()).filter(value => value !== '');
+      
+      // 获取活动描述
+      const activities = document.getElementById('activities').value.trim();
+      
+      // 简单的成功率计算逻辑（仅作演示）
+      let baseRate = 50; // 基础成功率
+      
+      // 根据学校调整成功率
+      const topSchools = ["哈佛大学", "麻省理工学院", "斯坦福大学", "清华大学", "北京大学"];
+      if (school) {
+        if (topSchools.includes(school)) {
+          baseRate -= 20; // 顶尖学校难度更大
+        }
+      } else {
+        baseRate -= 10; // 未选择学校降低成功率
+      }
+      
+      // 根据奖项数量调整成功率
+      baseRate += Math.min(awards.length * 5, 25); // 每个奖项加5分，最多25分
+      
+      // 根据活动描述长度调整成功率
+      if (activities.length > 100) {
+        baseRate += 10;
+      } else if (activities.length > 0) {
+        baseRate += 5;
+      }
+      
+      // 确保成功率在0-100之间
+      const successRate = Math.max(0, Math.min(100, baseRate));
+      
+      // 更新UI
+      const rateValue = document.getElementById('rateValue');
+      const progressBar = document.getElementById('progressBar');
+      
+      rateValue.textContent = `${successRate}%`;
+      progressBar.style.width = `${successRate}%`;
+      
+      // 根据成功率调整颜色
+      if (successRate < 30) {
+        progressBar.style.background = 'linear-gradient(135deg, #e74c3c 0%, #c0392b 100%)';
+      } else if (successRate < 70) {
+        progressBar.style.background = 'linear-gradient(135deg, #f39c12 0%, #d35400 100%)';
+      } else {
+        progressBar.style.background = 'linear-gradient(135deg, #2ecc71 0%, #27ae60 100%)';
+      }
+    }
+  </script>
+</body>
+</html>
